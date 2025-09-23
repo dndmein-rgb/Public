@@ -4,7 +4,7 @@ import Header from '../components/Header'
 const HomePage = () => {
   return (
     <>
-             
+           <title>Ecommerce Project</title>  
            <Header/>    
        
 
