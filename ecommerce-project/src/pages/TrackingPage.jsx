@@ -2,10 +2,10 @@ import React from 'react'
 import './TrackingPage.css'
 import Header from '../components/Header'
 
-const TrackingPage = () => {
+const TrackingPage = ({cart}) => {
   return (
     <>
-    <Header/>
+    <Header cart={cart}/>
     <title>Order Tracking</title>
     <link rel="icon" type='image/svg+xml' href="tracking-favicon.png" />
 
