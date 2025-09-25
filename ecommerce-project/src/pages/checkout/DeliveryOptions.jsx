@@ -1,50 +1,47 @@
-import dayjs from 'dayjs';
-import React from 'react'
-import { formatMoney } from '../../utils/money';
+import dayjs from "dayjs";
+import React from "react";
+import { formatMoney } from "../../utils/money";
+import axios from "axios";
 
-const DeliveryOptions = ({cartItem,deliveryOptions}) => {
+const DeliveryOptions = ({ cartItem, deliveryOptions,loadCart}) => {
   return (
     <div className="delivery-options">
-                               <div className="delivery-options-title">
-                                 Choose a delivery option:
-                               </div>
-                               {deliveryOptions.map((deliveryOption) => {
-                                 let priceString = "FREE SHIPPING";
-                                 if (deliveryOption.priceCents > 0) {
-                                   priceString = `${formatMoney(
-                                     deliveryOption.priceCents
-                                   )} - Shipping`;
-                                 }
-       
-                                 return (
-                                   <div
-                                     key={deliveryOption.id}
-                                     className="delivery-option"
-                                   >
-                                     <input
-                                       type="radio"
-                                       checked={
-                                         deliveryOption.id ===
-                                         cartItem.deliveryOptionId
-                                       }
-                                       className="delivery-option-input"
-                                       name={`delivery-option-${cartItem.productId}`}
-                                     />
-                                     <div>
-                                       <div className="delivery-option-date">
-                                         {dayjs(
-                                           deliveryOption.estimatedDeliveryTimeMs
-                                         ).format("dddd, MMMM D")}
-                                       </div>
-                                       <div className="delivery-option-price">
-                                         {priceString}
-                                       </div>
-                                     </div>
-                                   </div>
-                                 );
-                               })}
-                             </div>
-  )
-}
+      <div className="delivery-options-title">Choose a delivery option:</div>
+      {deliveryOptions.map((deliveryOption) => {
+        let priceString = "FREE SHIPPING";
+        if (deliveryOption.priceCents > 0) {
+          priceString = `${formatMoney(deliveryOption.priceCents)} - Shipping`;
+        }
+        const updateDeliveryOptions= async ()=>{
+         await axios.put(`/api/cart-items/${cartItem.productId}`,{
+            deliveryOptionId: deliveryOption.id,
+          });
+          await loadCart();
+        }
 
-export default DeliveryOptions
+        return (
+          <div key={deliveryOption.id} className="delivery-option"
+           onClick={updateDeliveryOptions}>
+            <input
+            onChange={()=>{}}
+              type="radio"
+              checked={deliveryOption.id === cartItem.deliveryOptionId}
+              className="delivery-option-input"
+              name={`delivery-option-${cartItem.productId}`}
+            />
+            <div>
+              <div className="delivery-option-date">
+                {dayjs(deliveryOption.estimatedDeliveryTimeMs).format(
+                  "dddd, MMMM D"
+                )}
+              </div>
+              <div className="delivery-option-price">{priceString}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default DeliveryOptions;
