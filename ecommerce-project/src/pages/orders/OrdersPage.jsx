@@ -5,7 +5,7 @@ import "./OrdersPage.css";
 import Header from "../../components/Header";
 import { Link } from "react-router";
 import OrdersGrid from "./OrdersGrid";
-const OrdersPage = ({ cart }) => {
+const OrdersPage = ({ cart ,loadCart }) => {
   const [orders, setOrders] = useState([]);
   useEffect(() => {
 const fetchOrdersData=async ()=>{
@@ -22,7 +22,7 @@ const response=await axios.get("/api/orders?expand=products")
       <div className="orders-page">
         <div className="page-title">Your Orders</div>
 
-        <OrdersGrid orders={orders}/>
+        <OrdersGrid orders={orders} loadCart={loadCart}/>
       </div>
     </>
   );

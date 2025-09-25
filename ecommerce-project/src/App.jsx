@@ -7,6 +7,7 @@ import TrackingPage from './pages/TrackingPage'
 import Error from './pages/Error'
 import { useEffect,useState } from 'react'
 import axios from 'axios'
+window.axios=axios
 function App() {
    const loadCart=async()=>{
          const response=await axios.get('/api/cart-items?expand=product')
@@ -22,7 +23,7 @@ function App() {
     <Routes>
       <Route index element={<HomePage cart={cart} loadCart={loadCart}/>}/>
       <Route path="checkout" element={<CheckoutPage cart={cart} loadCart={loadCart}/>}/>
-       <Route path="orders" cart={cart} element={<OrdersPage/>}/>
+       <Route path="orders" element={<OrdersPage cart={cart} loadCart={loadCart}/>}/>
        <Route path='tracking/:orderId/:productId' element={<TrackingPage cart={cart}/>}/>
        <Route path='*' element={<Error cart ={cart}/>} />
     </Routes>
