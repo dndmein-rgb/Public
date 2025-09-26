@@ -3,6 +3,7 @@ import { formatMoney } from "../../utils/money";
 import axios from "axios";
 
 const CartItemDetails = ({ cartItem,loadCart }) => {
+  const [quantity, setQuantity] = useState(cartItem.quantity)
   const [isUpdatingQuantity, setIsUpdatingQuantity] = useState(false);
   if (!cartItem || !cartItem.product) return null;
   const deleteCartItem = async () => {
@@ -10,8 +11,12 @@ const CartItemDetails = ({ cartItem,loadCart }) => {
     
       await loadCart();
   };
-       const updateQuantity=()=>{
+       const updateQuantity= async ()=>{
         if(isUpdatingQuantity){
+          await axios.put(`/api/cart-items/${cartItem.productId}`,{
+            quantity:Number(quantity)
+          })
+          await loadCart();
           setIsUpdatingQuantity(false);
         }
         else{
@@ -19,7 +24,19 @@ const CartItemDetails = ({ cartItem,loadCart }) => {
         }
        }
   
- 
+ const updateQuantityInput=(event)=>{
+  setQuantity(event.target.value)
+ }
+ const handleQuantityKeyDown=(event)=>{
+  const keyPressed=event.key
+  if(keyPressed==='Enter'){
+    updateQuantity();
+  }
+  else if(keyPressed==='Escape'){
+    setQuantity(cartItem.quantity);
+    setIsUpdatingQuantity(false);
+  }
+ }
   return (
     <>
       <img
@@ -35,7 +52,10 @@ const CartItemDetails = ({ cartItem,loadCart }) => {
         <div className="product-quantity">
           <span>
             Quantity:{isUpdatingQuantity
-            ?<input className="quantity-textbox" type="text" />
+            ?<input className="quantity-textbox" type="text"
+              value={quantity} onChange={updateQuantityInput}
+              onKeyDown={handleQuantityKeyDown}
+            />
             :<span className="quantity-label">{cartItem.quantity}</span>
             }
             
